@@ -36,27 +36,31 @@ object DB extends Log {
     mongoClient.asInstanceOf[MongoClient](Config.db.database)
   }
 
-  val usersColl = db("users")
-  val msgsColl   = db("msgs")
+  val usersColl   = db("users")
+  val threadsColl = db("threads")
+  val postsColl   = db("posts")
   val allColls = List(
     usersColl,
-    msgsColl
+    threadsColl,
+    postsColl
   )
 
   ensureAllIndexies()
 
   def ensureAllIndexies() {
     ensureUsersIndexies
-    ensureMsgsIndexies
+    ensureThreadsIndexies
+    ensurePostsIndexies
   }
 
   private def ensureUsersIndexies = {
-    usersColl.ensureIndex(MongoDBObject("name" -> 1 ) , "user_name_index", true)
   }
-  private def ensureMsgsIndexies = {
-    usersColl.ensureIndex(MongoDBObject("senderName" -> 1 ))
+  private def ensureThreadsIndexies = {
+  }
+  private def ensurePostsIndexies = {
   }
 
+  
 
   //----------------------------------------------------------------------------
 
