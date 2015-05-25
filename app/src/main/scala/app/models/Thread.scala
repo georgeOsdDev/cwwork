@@ -28,6 +28,10 @@ object Thread {
   private def findByAddress(address: String): Option[Thread] = {
     None
   }
+
+  def listAll(tag: Seq[String], q: Option[String], limit: Int, skip: Int, sort: String): List[User] = {
+  }
+
   
   def searchByKeyWord(keyword: String): List[Thread] = {
     List.empty

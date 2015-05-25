@@ -31,6 +31,7 @@ class User(doc: UserType) extends BaseModel {
   
   override def toMap: Map[String, AnyRef] = {
     Map(
+      "id"    -> id,
       "email" -> email,
       "name" -> name,
       "latestPost" -> latestPost.map(_.toMap)
@@ -39,6 +40,7 @@ class User(doc: UserType) extends BaseModel {
 
   def toMapForMe = {
     Map(
+      "id"    -> id,
       "email" -> email,
       "name" -> name,
       "token" -> token,

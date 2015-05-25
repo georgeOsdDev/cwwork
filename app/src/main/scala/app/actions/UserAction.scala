@@ -50,13 +50,11 @@ class ShowUser extends BaseAction with APIAction {
 @PUT("/api/:version/users/:uid")
 class UpdateUser extends BaseAction with APIAction {
   def execute(){
-    
   }
 }
 
 @DELETE("/api/:version/users/:uid")
 class DeleteUser extends BaseAction with APIAction {
   def execute(){
-    
   }
 }

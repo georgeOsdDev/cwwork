@@ -6,10 +6,15 @@ import xitrum.annotation.{GET, POST, PUT, DELETE, Swagger}
 class ListThreads extends BaseAction with APIAction {
   def execute(){
     
-    // searchByTag
-    
-    // searchByKeyword
-    
+    val tags    = paramo[String]("tags").getOrElse("").split(',')
+    val keyword = paramo[String]("q")
+
+    val limit = paramo[Int]("limit").getOrElse(100)
+    val skip  = paramo[Int]("offset").getOrElse(0)
+    val sort  = paramo[String]("skip").getOrElse("_id")
+
+
+    respondSuccess(Map("users" -> Thread.listAll(tags, keyword, limit, skip, sort).map(_.toMap)))
   }
 }
 
