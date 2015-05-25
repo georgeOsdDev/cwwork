@@ -5,10 +5,27 @@ import app.service.DB
 
 
 class Post(doc: MongoDBObject) extends BaseModel {
+
+  lazy val pid       = doc.getAs[String]("_id", "")
+  lazy val tid       = doc.getAsOrElse[String]("tid", "")
+  lazy val body      = doc.getAsOrElse[String]("body", "")
+  lazy val createdBy = doc.getAsOrElse[String]("createdBy", "")
+  lazy val createdAt = doc.getAsOrElse[Int]("createdAt", 0)
+  lazy val updatedAt = doc.getAsOrElse[Int]("updatedAt", 0)
+  lazy val deletedAt = doc.getAsOrElse[Int]("deletedAt", 0)
+
   
-  override def toJSON = {
+  override def toJson = {
+    s"""{"pid":${pid}}"""
+  }
+  
+  override def toMap:Map[String, AnyRef] = {
     Map(
-      "pid" -> doc.getOrElse("_id", "")
+      "pid" -> pid,
+      "tid" -> tid,
+      "body" -> body,
+      "createdBy" -> createdBy,
+      "createdAt" -> createdAt.toString
     )
   }
 }

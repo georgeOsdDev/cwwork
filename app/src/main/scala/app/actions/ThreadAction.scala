@@ -36,5 +36,8 @@ class UpdateThread extends BaseAction with APIAction {
 
 @DELETE("/api/:version/threads/:tid")
 class DeleteThread extends BaseAction with APIAction {
-  
+    def execute(){
+    
+  }
+
 }

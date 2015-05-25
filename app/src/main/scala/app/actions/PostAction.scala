@@ -36,5 +36,7 @@ class UpdatePost extends BaseAction with APIAction {
 
 @DELETE("/api/:version/threads/:tid/posts/:pid")
 class DeletePost extends BaseAction with APIAction {
-  
+  def execute(){
+    
+  }
 }

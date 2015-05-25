@@ -1,7 +1,12 @@
 package app.service
 
+import java.security.{MessageDigest, SecureRandom}
 import java.util.{ArrayList => JArrayList, Date}
+
 import scala.util.control.NonFatal
+import scala.util.Random
+
+import io.netty.util.CharsetUtil.UTF_8
 import org.bson.types.ObjectId
 import com.mongodb.casbah.Imports._
 
@@ -66,6 +71,16 @@ object DB extends Log {
 
   def nowSecs() = (System.currentTimeMillis() / 1000).toInt
 
+
+  def encrypt(value: String): String = {
+    val messageDigest = MessageDigest.getInstance("MD5")
+    messageDigest.reset
+    messageDigest.update(value.getBytes(UTF_8))
+    messageDigest.digest.map("%02x".format(_)).mkString
+  }
+
+  def createRandomString = new Random(new SecureRandom()).alphanumeric.take(10).mkString
+  
   def objIdFromSecs(secs: Int) = {
     val date = new Date(secs.toLong * 1000)
     new ObjectId(date)

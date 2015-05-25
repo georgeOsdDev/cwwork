@@ -6,11 +6,16 @@ import app.service.DB
 
 class Thread(doc: MongoDBObject) extends BaseModel {
   
-  override def toJSON = {
-    Map(
-      "tid" -> doc.getOrElse("_id", "")
-    )
+  lazy val id             = doc.getAsOrElse[String]("_id", "")
+
+  
+  override def toJson = {
+    s"""{"tid":"${id}}"""
   }
+  
+  override def toMap = Map(
+    "tid" -> id
+  )
 }
 
 object Thread {

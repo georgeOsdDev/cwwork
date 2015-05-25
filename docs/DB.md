@@ -7,7 +7,7 @@
 ## User
 
   * _id: ObjectId
-  * address: String (pattern=email)
+  * email: String (pattern=email)
   * name: String (min=1 max=10)
   * password: String (min=1 max=100)
   * token: String
