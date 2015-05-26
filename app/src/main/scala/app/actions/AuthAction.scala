@@ -4,6 +4,7 @@ import xitrum.annotation.{POST, PUT, DELETE, Swagger}
 
 import app.constants.ErrorCds
 import app.models.User
+import app.validators.AppValidator
 
 @Swagger(
   Swagger.Resource("auth", "API for authentication"),
@@ -53,9 +54,8 @@ class SignUp extends BaseAction with Versioning {
       respondClientError(ErrorCds.MISSING_PARAM, "email")
       return
     } else {
-      // @TODO
-      val IS_VALID_EMAIL_PATTERN = true
-      if (!IS_VALID_EMAIL_PATTERN) {
+      val isValidEmail = AppValidator.pattern(AppValidator.EMAIL_REGEX)
+      if (!isValidEmail(emailo.get)) {
         respondClientError(ErrorCds.INVALID_PARAM, "email")
         return
       }
@@ -65,9 +65,9 @@ class SignUp extends BaseAction with Versioning {
       respondClientError(ErrorCds.MISSING_PARAM, "email")
       return
     } else {
-      // @TODO
-      val IS_VALID_PASSWORD_PATTERN = true
-      if (!IS_VALID_PASSWORD_PATTERN) {
+      val isValidMinLengthPassword = AppValidator.minLength(AppValidator.PASSWORD_MINLENGTH)
+      val isValidMaxLengthPassword = AppValidator.maxLength(AppValidator.PASSWORD_MAXLENGTH)
+      if (!isValidMinLengthPassword(passwordo.get) || !isValidMaxLengthPassword(passwordo.get)) {
         respondClientError(ErrorCds.INVALID_PARAM, "password")
         return
       }
