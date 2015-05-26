@@ -262,9 +262,9 @@ Name              |Required |Type           |Value        |
 ------------------|---------|---------------|-------------|
 keyword           |NO       |String (Query) |検索キーワード threads.titleを前方一致検索|
 tag               |NO       |String (Query) |csvで指定 eg. tag1,tag2    |
+limit             |NO       |Int (Query)    |Default 0    |
 skip              |NO       |Int (Query)    |Default 0    |
-offset            |NO       |Int (Query)    |Default 0    |
-limit             |NO       |Int (Query)    |Default 100  |
+sort              |NO       |String (Query) |Default _id  |
 
 
 #### Responseパラメータ
@@ -304,11 +304,9 @@ thread詳細取得API
 
 Name              |Required |Type           |Value        |
 ------------------|---------|---------------|-------------|
-keyword           |NO       |String (Query) |検索キーワード threads.titleを前方一致検索|
-tag               |NO       |String (Query) |csvで指定 eg. tag1,tag2    |
+limit             |NO       |Int (Query)    |Default 0    |
 skip              |NO       |Int (Query)    |Default 0    |
-offset            |NO       |Int (Query)    |Default 0    |
-limit             |NO       |Int (Query)    |Default 100  |
+sort              |NO       |String (Query) |Default _id  |
 
 
 #### Responseパラメータ

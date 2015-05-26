@@ -9,8 +9,9 @@ import app.validators.AppValidator
 
 @Swagger(
   Swagger.Resource("threads", "APIs to list threads"),
-  Swagger.StringBody("body", "email"),
-  Swagger.StringBody("token", "token"),
+  Swagger.StringPath("version", "api version"),
+  Swagger.StringHeader("X-APP-EMAIL", "email"),
+  Swagger.StringHeader("X-APP-TOKEN", "token"),
   Swagger.OptIntQuery("limit", "limit count"),
   Swagger.OptIntQuery("skip", "Skip count"),
   Swagger.OptStringQuery("sort", "Sort key"),
@@ -28,8 +29,8 @@ class ListThreads extends BaseAction with APIAction {
     val keyword = paramo[String]("keyword")
 
     val limit = paramo[Int]("limit")
-    val skip  = paramo[Int]("offset")
-    val sort  = paramo[String]("skip")
+    val skip  = paramo[Int]("skip")
+    val sort  = paramo[String]("sort")
 
     respondSuccess(Map("threads" -> Thread.listAll(tags, keyword, limit, skip, sort).map(_.toMap)))
   }

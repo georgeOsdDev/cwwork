@@ -10,8 +10,8 @@ class ListUsers extends BaseAction with APIAction {
   def execute(){
     
     val limit = paramo[Int]("limit")
-    val skip  = paramo[Int]("offset")
-    val sort  = paramo[String]("skip")
+    val skip  = paramo[Int]("skip")
+    val sort  = paramo[String]("sort")
     
     respondSuccess(Map("users" -> User.listAll(limit, skip, sort).map(_.toMap)))
   }

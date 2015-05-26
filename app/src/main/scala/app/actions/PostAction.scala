@@ -35,7 +35,7 @@ class ListPosts extends BaseAction with APIAction with DependsOnThread {
 
     val tid   = param[String]("tid")
     val limit = paramo[Int]("limit")
-    val skip  = paramo[Int]("offset")
+    val skip  = paramo[Int]("skip")
 
     val thread = at("thread").asInstanceOf[Thread]
     
