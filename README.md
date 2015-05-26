@@ -6,6 +6,6 @@
 
 ```
 git clone https://github.com/georgeOsdDev/cwwork.git
-cd cwwork
+cd cwwork/app
 sbt/sbt run
 ```
