@@ -1,4 +1,8 @@
-# Models
+# DB
+
+  * cwwork
+
+# Collections
 
   * User
   * Threads
@@ -23,7 +27,7 @@
 
   * _id: ObjectId
   * title: String (min=1 max=40)
-  * createdBy: String (address)
+  * createdBy: User
   * createdAt: Int (unixTime)
   * tags: String[]
   * recentPosts: Post[]
@@ -35,7 +39,7 @@
   * _id: ObjectId
   * tid: ObjectId
   * body: String (min=1, max=140)
-  * createdBy: String (address)
+  * createdBy: User
   * createdAt: Int (unixTime)
 
 
