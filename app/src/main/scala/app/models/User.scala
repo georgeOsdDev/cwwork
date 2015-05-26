@@ -12,7 +12,7 @@ import app.service.DB.usersColl.{T => UserType}
 
 class User(doc: UserType) extends BaseModel {
   
-  lazy val id             = doc._id.map(_.toString).getOrElse("")
+  lazy val id             = doc.getAs[ObjectId]("_id")
   lazy val email          = doc.getAsOrElse[String]("email", "")
   lazy val name           = doc.getAsOrElse[String]("name", "Anonymous")
   lazy val password       = doc.getAsOrElse[String]("password", "")
@@ -29,9 +29,9 @@ class User(doc: UserType) extends BaseModel {
     s"""{"email":"${email}", "name": "${name}"}"""
   }
   
-  override def toMap: Map[String, AnyRef] = {
+  override def toMap: Map[String, Any] = {
     Map(
-      "id"    -> id,
+      "id"    -> id.toString,
       "email" -> email,
       "name" -> name,
       "latestPost" -> latestPost.map(_.toMap)
@@ -54,12 +54,11 @@ class User(doc: UserType) extends BaseModel {
   def isDeleted = deletedAt > 0
   
   def refreshToken() = {
-    User.refreshToken(id)
+    User.refreshToken(id.toString)
   }
 }
 
 object User {
-  private val col = DB.usersColl
 
   private def findOne(key: String, value: AnyRef): Option[User] = {
     val q = MongoDBObject(key -> value)
@@ -77,8 +76,11 @@ object User {
     findOne("email", email)
   }
 
-  def listAll(limit: Int, skip: Int, sort: String): List[User] = {
-    val cursor = DB.usersColl.find().sort(MongoDBObject(sort -> "1")).skip(skip).limit(limit)
+  def listAll(limit: Option[Int], skip: Option[Int], sort: Option[String]): List[User] = {
+    val cursor = DB.usersColl.find()
+                             .sort(MongoDBObject(sortableKeyOrID(sort ) -> 1))
+                             .skip(skip.getOrElse(0))
+                             .limit(limit.getOrElse(100))
     val ret    = new ListBuffer[User]
     while (cursor.hasNext) {
       ret += new User(cursor.next())
@@ -86,9 +88,13 @@ object User {
     ret.toList
   }
   
-  def searchByName(name: String): List[User] = {
+  def searchByName(name: String, limit: Option[Int], skip: Option[Int], sort: Option[String]): List[User] = {
     val query  = MongoDBObject("name" -> "name.*".r)
     val cursor = DB.usersColl.find()
+                             .sort(MongoDBObject(sortableKeyOrID(sort ) -> "1"))
+                             .skip(skip.getOrElse(0))
+                             .limit(limit.getOrElse(100))
+
     val ret    = new ListBuffer[User]
     while (cursor.hasNext) {
       ret += new User(cursor.next())
@@ -127,7 +133,7 @@ object User {
       "name"      -> name,
       "createdAt" -> DB.nowSecs()
     )
-    DB.insertIfNonexistent(col, o)
+    DB.insertIfNonexistent(DB.usersColl, o)
   }
   
   def refreshToken(id: String): Option[User] = {
@@ -138,7 +144,7 @@ object User {
       "token" -> DB.createRandomString,
       "tokenExpiredAt" -> (DB.nowSecs() + 24 * 60 * 60)
     )
-    val result = col.update(query, upd)
+    val result = DB.usersColl.update(query, upd)
     if (result.getN == 1)
       findById(id)
     else
@@ -156,5 +162,16 @@ object User {
   private def encrypt(key:String):String =  {
     DB.encrypt(key)
   }
-
+  
+  private def sortableKeyOrID(keyo: Option[String]) = {
+    keyo match {
+      case Some(key) =>
+        if (key == "email" || key == "name")
+          key
+        else
+          "_id"
+      case _ =>
+        "_id"
+    }
+  }
 }

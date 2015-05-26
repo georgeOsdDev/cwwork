@@ -9,9 +9,9 @@ import app.models.User
 class ListUsers extends BaseAction with APIAction {
   def execute(){
     
-    val limit = paramo[Int]("limit").getOrElse(100)
-    val skip  = paramo[Int]("offset").getOrElse(0)
-    val sort  = paramo[String]("skip").getOrElse("_id")
+    val limit = paramo[Int]("limit")
+    val skip  = paramo[Int]("offset")
+    val sort  = paramo[String]("skip")
     
     respondSuccess(Map("users" -> User.listAll(limit, skip, sort).map(_.toMap)))
   }
@@ -20,7 +20,8 @@ class ListUsers extends BaseAction with APIAction {
 @POST("/api/:version/users")
 class CreateUser extends BaseAction with APIAction {
   def execute(){
-    
+    // @FIXME use signupAction instead
+    redirectTo[SignUp]()
   }
 }
 
@@ -50,11 +51,13 @@ class ShowUser extends BaseAction with APIAction {
 @PUT("/api/:version/users/:uid")
 class UpdateUser extends BaseAction with APIAction {
   def execute(){
+    respondText("Not implemented")
   }
 }
 
 @DELETE("/api/:version/users/:uid")
 class DeleteUser extends BaseAction with APIAction {
   def execute(){
+    respondText("Not implemented")
   }
 }

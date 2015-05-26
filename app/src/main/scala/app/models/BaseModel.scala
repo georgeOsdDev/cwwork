@@ -13,7 +13,7 @@ abstract class BaseModel {
 
   def toJson: String
 
-  def toMap: Map[String, AnyRef]
+  def toMap: Map[String, Any]
 }
 
 object BaseModel {
