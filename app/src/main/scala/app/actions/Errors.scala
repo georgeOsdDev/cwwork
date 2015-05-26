@@ -1,5 +1,7 @@
 package app.actions
 
+import io.netty.handler.codec.http.HttpResponseStatus.NOT_FOUND
+
 import xitrum.Action
 import xitrum.annotation.{Error404, Error500}
 
@@ -9,6 +11,7 @@ import ErrorCds._
 @Error404
 class NotFoundError extends BaseAction {
   def execute() {
+    response.setStatus(NOT_FOUND)
     respondClientError(UNKOWN_API, "API not found")
   }
 }
@@ -16,6 +19,6 @@ class NotFoundError extends BaseAction {
 @Error500
 class ServerError extends BaseAction {
   def execute() {
-    respondClientError(SYSTEM_ERROR, "Internal server error")
+    respondServerError(SYSTEM_ERROR, "Internal server error")
   }
 }
