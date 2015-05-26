@@ -42,12 +42,28 @@ trait NeedsToken {
   this: Action =>
   // Check accessToken
     
+  private val X_TOKEN_HEADER = "X-APP-TOKEN"
+  private val X_EMAIL_HEADER = "X-APP-EMAIL"
+  
   lazy val reqJSON = requestContentJson[Map[String, String]].getOrElse(Map.empty)
-
+  lazy val headers = request.headers
+  
   beforeFilter {
 
-    val emailo  = reqJSON.get("email")
-    val tokeno  = reqJSON.get("token")
+    val emailInHeader = Option(headers.get(X_EMAIL_HEADER))
+    val tokenlInHeader = Option(headers.get(X_TOKEN_HEADER))
+    
+    val emailo  = 
+      emailInHeader match {
+      case Some(v) => emailInHeader
+      case None =>reqJSON.get("email")
+    }
+
+    val tokeno  = 
+      tokenlInHeader match {
+      case Some(v) => tokenlInHeader
+      case None =>reqJSON.get("token")
+    }
 
     val user = for (email <- emailo; token <- tokeno) yield {
       User.authByToken(email, token).getOrElse(None)
