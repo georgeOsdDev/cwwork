@@ -29,16 +29,17 @@ class CreateUser extends BaseAction with APIAction {
 class ShowUser extends BaseAction with APIAction {
   def execute(){
     val uid = param[String]("uid")
+    val currentUser = at("currentUser").asInstanceOf[User] // See NeedsToken#BeforeFilter
 
     val usero = 
       if (uid == "me")
-        Option(at("currentUser")) // See NeedsToken#BeforeFilter
+        Option(currentUser)
       else
         User.findById(uid)
-    
+
     usero match {
       case Some(u) =>
-        if (reqJSON.get("email").get == u.email)
+        if (currentUser.email == u.email)
           respondSuccess(Map("user" -> u.toMapForMe))
         else
           respondSuccess(Map("user" -> u.toMap))

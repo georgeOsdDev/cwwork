@@ -50,19 +50,19 @@ trait NeedsToken {
   
   beforeFilter {
 
-    val emailInHeader = Option(headers.get(X_EMAIL_HEADER))
+    val emailInHeader  = Option(headers.get(X_EMAIL_HEADER))
     val tokenlInHeader = Option(headers.get(X_TOKEN_HEADER))
     
     val emailo  = 
       emailInHeader match {
-      case Some(v) => emailInHeader
-      case None =>reqJSON.get("email")
+        case Some(v) => emailInHeader
+        case None =>reqJSON.get("email")
     }
 
     val tokeno  = 
       tokenlInHeader match {
-      case Some(v) => tokenlInHeader
-      case None =>reqJSON.get("token")
+        case Some(v) => tokenlInHeader
+        case None =>reqJSON.get("token")
     }
 
     val user = for (email <- emailo; token <- tokeno) yield {

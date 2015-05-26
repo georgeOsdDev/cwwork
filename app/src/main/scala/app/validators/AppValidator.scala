@@ -14,8 +14,6 @@ object AppValidator {
   val POST_MINLENGTH = 1
   val POST_MAXLENGTH = 140
 
-  
-  
   def maxLength(max: Int): String => Boolean = {
     (v) => v.length <= max
   }

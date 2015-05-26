@@ -16,6 +16,7 @@ object ErrorCds {
   // Server errors
   val IN_MAINTENANCE = 201
   val SYSTEM_ERROR   = 202
+  val POSTS_COUNT_REACHED_MAX = 203
   
   val UNEXPECTED_ERROR = 999
 }

@@ -31,12 +31,13 @@ class Login extends BaseAction with Versioning {
         respondClientError(ErrorCds.INVALID_PARAM, "email or password is wrong")
       case Some(u: User)    =>
         u.refreshToken() match {
-          case None =>
-            respondServerError(ErrorCds.SYSTEM_ERROR, "Failed to update token")
-          case Some(u2) =>
+          case Some(u2: User) =>
             respondSuccess(u2.toMapForMe)
+          case _ =>
+            respondServerError(ErrorCds.SYSTEM_ERROR, "Failed to update token")
         }
-      case ignore =>
+      case unknown =>
+        respondServerError(ErrorCds.SYSTEM_ERROR, "Failed to update token")
     }
   }
 }

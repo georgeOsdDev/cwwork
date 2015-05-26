@@ -12,7 +12,7 @@ import app.service.DB.usersColl.{T => UserType}
 
 class User(doc: UserType) extends BaseModel {
   
-  lazy val id             = doc.getAs[ObjectId]("_id")
+  lazy val id             = doc.getAs[ObjectId]("_id").map(_.toString)
   lazy val email          = doc.getAsOrElse[String]("email", "")
   lazy val name           = doc.getAsOrElse[String]("name", "Anonymous")
   lazy val password       = doc.getAsOrElse[String]("password", "")
@@ -25,22 +25,26 @@ class User(doc: UserType) extends BaseModel {
   lazy val createdAt = doc.getAsOrElse[Int]("createdAt", 0)
   lazy val deletedAt = doc.getAsOrElse[Int]("deletedAt", 0)
   
-  override def toJson = {
-    s"""{"email":"${email}", "name": "${name}"}"""
-  }
-  
   override def toMap: Map[String, Any] = {
     Map(
-      "id"    -> id.toString,
+      "_id"    -> id,
       "email" -> email,
       "name" -> name,
       "latestPost" -> latestPost.map(_.toMap)
     )
   }
 
+  def toMapForPost: Map[String, Any] = {
+    Map(
+      "_id"    -> id,
+      "email" -> email,
+      "name" -> name
+    )
+  }
+
   def toMapForMe = {
     Map(
-      "id"    -> id,
+      "_id"    -> id,
       "email" -> email,
       "name" -> name,
       "token" -> token,
@@ -54,7 +58,11 @@ class User(doc: UserType) extends BaseModel {
   def isDeleted = deletedAt > 0
   
   def refreshToken() = {
-    User.refreshToken(id.toString)
+    if(id.isDefined) User.refreshToken(id.get)
+  }
+  
+  def setLatestPost(post: Post) = {
+    if(id.isDefined) User.setLatestPost(id.get, post)
   }
 }
 
@@ -149,6 +157,18 @@ object User {
       findById(id)
     else
       None
+  }
+
+  def setLatestPost(id: String, post: Post) = {
+    val query = MongoDBObject(
+       "_id" -> new ObjectId(id) 
+    )
+    val upd = $set(
+      "latestPost" -> post.toMap,
+      "updatedAt" -> DB.nowSecs()
+    )
+    val result = DB.usersColl.update(query, upd)
+    result.getN == 1
   }
 
   def initializeAdmin(email: String, password: String, name: String):Unit = {
